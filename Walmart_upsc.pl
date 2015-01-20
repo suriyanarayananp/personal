@@ -123,7 +123,7 @@ foreach my $upsc (@upscarr)
 		}
 		
 		# Collecting product description
-		my $dumpdesc = &clean($1) if($product_content =~ m/class\=\"product\-about\s*js\-about\-[^>]*?\">([\w\W]*?)<\/div>\s*<\/div>\s*<\/div>/is);
+		my $dumpdesc = $1 if($product_content =~ m/class\=\"product\-about\s*js\-about\-[^>]*?\">([\w\W]*?)<\/div>\s*<\/div>\s*<\/div>/is);
 		if ( $product_content =~ m/About\s*this\s*item<\/h2>[\w\W]*?<p>([\w\W]*?)<\/div>/is )
 		{
 			$description = clean($1);
@@ -172,11 +172,32 @@ foreach my $upsc (@upscarr)
 			$size=clean($2);
 		}
 		# print "Size:: $size\n";
-		my $suse = &clean($1) if($product_content =~ m/<b>\s*Suggested\s*Use\s*<\/b>([\w\W]*?)<\/p>/is);
-		my $sfacts = &clean($1) if($product_content =~ m/<b>\s*Supplement\s*Facts\s*<\/b>([\w\W]*?)<\/p>/is);
-		my $warn = &clean($1) if($product_content =~ m/<b>\s*Warnings\s*\:\s*<\/b>([\w\W]*?)<\/p>/is);
-		my $oingred = &clean($1) if($product_content =~ m/<b>\s*Other\s*Ingredients\s*\:\s*<\/b>([\w\W]*?)<\/p>/is);
-		my $ingred = &clean($1) if($product_content =~ m/>\s*Ingredients\s*\:\s*([\w\W]*?)<\/p>\s*<\/section>/is);
+		my ($suse,$sfacts,$warn,$oingred,$ingred);
+		if($dumpdesc =~ m/<b>\s*Suggested\s*Use\s*<\/b>([\w\W]*?)<\/p>/is)
+		{
+			$suse = &clean($1);
+			$dumpdesc =~ s/<b>\s*Suggested\s*Use\s*<\/b>([\w\W]*?)<\/p>//igs;
+		}
+		if($dumpdesc =~ m/<b>\s*Supplement\s*Facts\s*<\/b>([\w\W]*?)<\/p>/is)
+		{
+			$sfacts = &clean($1);
+			$dumpdesc =~ s/<b>\s*Supplement\s*Facts\s*<\/b>([\w\W]*?)<\/p>//igs;
+		}
+		if($dumpdesc =~ m/<b>\s*Warnings\s*\:\s*<\/b>([\w\W]*?)<\/p>/is)
+		{
+			$warn = &clean($1);
+			$dumpdesc =~ s/<b>\s*Warnings\s*\:\s*<\/b>([\w\W]*?)<\/p>//igs;
+		}
+		if($dumpdesc =~ m/<b>\s*Other\s*Ingredients\s*\:\s*<\/b>([\w\W]*?)<\/p>/is)
+		{
+			$oingred = &clean($1);
+			$dumpdesc =~ s/<b>\s*Other\s*Ingredients\s*\:\s*<\/b>([\w\W]*?)<\/p>//igs;
+		}
+		if($dumpdesc =~ m/>\s*Ingredients\s*\:\s*([\w\W]*?)<\/p>\s*<\/section>/is)
+		{
+			$ingred = &clean($1);
+			$dumpdesc =~ s/>\s*Ingredients\s*\:\s*([\w\W]*?)<\/p>\s*<\/section>//igs;
+		}
 		my $str;
 		for(my $i=0; $i<@regexarray;$i++)
 		{
