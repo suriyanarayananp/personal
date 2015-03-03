@@ -29,7 +29,8 @@ while(<ff>)
 	# exit;
 	if($upcContent =~ m/UPCNOTFOUND/is)
 	{
-		print "$upc -> No Asin\n";
+		$count++;
+		print "$count -> $upc -> No Asin\n";
 		open ll,">>AmazonOutput.xls";
 		print ll "$count\t$upc\n";
 		close ll;
@@ -37,15 +38,28 @@ while(<ff>)
 	elsif($upcContent =~ m/^([^>]*?)$/is)
 	{
 		my $asin = $1;
-		print "$upc -> $asin\n";
 		my $amazonURL = "http://www.amazon.com/dp/".$asin;
 		my $content = &lwp_get($amazonURL);
 		open ss,">second.html";
 		print ss $content;
 		close ss;
 		my $title = &clean($1) if($content =~ m/id\=\"productTitle\"[^>]*?>([\w\W]*?)<\/h1>/is);
-		my $imageurl = &clean($1) if($content =~ m/data\-old\-hires\=\"([^>]*?)\"/is);
+		my $imageurl;
+		if($content =~ m/\"hiRes\"\:\"([^>]*?)\"/is)
+		{
+			$imageurl = &clean($1)
+		}
+		elsif($content =~ m/\"large\"\:\"([^>]*?)\"/is)
+		{
+			$imageurl = &clean($1)
+		}
+		elsif($content =~ m/data\-old\-hires\=\"([^>]*?)\"/is)
+		{
+			$imageurl = &clean($1)
+		}
 		getstore($imageurl,"./Images/$asin.jpg");
+		$count++;
+		print "$count -> $upc -> $asin\n";
 		open ll,">>AmazonOutput.xls";
 		print ll "$count\t$upc\t$asin\t$title\t$imageurl\n";
 		close ll;

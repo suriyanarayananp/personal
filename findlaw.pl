@@ -104,11 +104,11 @@ sub lwp_get()
     $cookie->add_cookie_header($req); 
     my $code = $res->code(); 
     print $code,"\n"; 
-    if($code =~ m/50/is) 
-    { 
-        sleep 500; 
-        goto REPEAT; 
-    } 
+    # if($code =~ m/50/is) 
+    # { 
+        # sleep 500; 
+        # goto REPEAT; 
+    # } 
     return($res->content()); 
 }
 sub clean()
