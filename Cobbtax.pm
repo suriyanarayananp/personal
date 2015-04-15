@@ -40,10 +40,12 @@ sub scrape()
 	my $cont3;
 	if($NameFlag == 'Y')
 	{
+		print "Name Count \n";
 		$cont3="&&ctl00%24cphMainContent%24SkeletonCtrl_27%24drpTaxYear=2014&ctl00%24cphMainContent%24SkeletonCtrl_27%24drpStatus=All&ctl00%24cphMainContent%24SkeletonCtrl_27%24drpSearchParam=Owner+Name&ctl00%24cphMainContent%24SkeletonCtrl_27%24txtSearchParam=";
 	}
 	else
 	{
+		print "Address Count \n";
 		$cont3="&&ctl00%24cphMainContent%24SkeletonCtrl_27%24drpTaxYear=2014&ctl00%24cphMainContent%24SkeletonCtrl_27%24drpStatus=All&ctl00%24cphMainContent%24SkeletonCtrl_27%24drpSearchParam=Property+Address&ctl00%24cphMainContent%24SkeletonCtrl_27%24txtSearchParam=";
 	}
 	my $view="ctl00%24cphMainContent%24SkeletonCtrl_27%24btnSearch=Search";

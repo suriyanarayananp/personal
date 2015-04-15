@@ -53,35 +53,51 @@ foreach my $sheet (1)
 # Address Lookup for CobbTax
 my @arraycont;
 print "
-Enter 1. Cobb
-Enter Address Lookup Options:-";
+Enter 1. Name-Lookup
+Enter 2. Address-Lookup
+Enter Lookup Options:-";
 my $AddressOptions = <STDIN>;
 chomp ($AddressOptions);
-my %hashoptions =('1'=>'COBB');
-my @options = split /\,/,$AddressOptions;
-foreach(@options)
+foreach (@input_array)
 {
-	my $opt = $_;
-	foreach (@input_array)
+	my $line = $_;
+	if($line =~ m/\bCOBB\b/is)
 	{
-		my $line = $_;
-		if($line =~ m/$hashoptions{$opt}/is)
+		push @arraycont, $line;
+	}
+}
+if($AddressOptions == 2)
+{
+	# Loop for AddressLookup
+	foreach(@arraycont)
+	{
+		my @array = split /\t/, $_;
+		my $key = $array[6];
+		my $county = $array[10];
+		$county = &clean($county);
+		sleep 10;
+		if($county =~ m/cobb/is)
 		{
-			push @arraycont, $line;
+			print "$key -> $county\n\n";
+			&Cobbtax::scrape($key,$county,\@array);
 		}
 	}
 }
-foreach(@arraycont)
+elsif($AddressOptions == 1)
 {
-	my @array = split /\t/, $_;
-	my $key = $array[6];
-	my $county = $array[10];
-	$county = &clean($county);
-	sleep 10;
-	if($county =~ m/cobb/is)
+	# Loop for NameLookup
+	foreach(@arraycont)
 	{
-		print "$key -> $county\n\n";
-		&Cobbtax::scrape($key,$county,\@array);
+		my @array = split /\t/, $_;
+		my $key = $array[3];
+		my $county = $array[10];
+		$county = &clean($county);
+		sleep 10;
+		if($county =~ m/cobb/is)
+		{
+			print "$key -> $county\n\n";
+			&Cobbtax::scrape($key,$county,\@array,'Y');
+		}
 	}
 }
 sub clean()
